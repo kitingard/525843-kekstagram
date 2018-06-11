@@ -49,8 +49,15 @@ bigPictureElement.querySelector('.likes-count').textContent = pictures[1].likes;
 bigPictureElement.querySelector('.comments-count').textContent = commentsList.length;
 bigPictureElement.querySelector('.social__caption').textContent = pictures[1].description;
 
-bigPictureElement.querySelector('.social__picture').src = 'img/avatar-' + getRandom(AVATAR_MIN, AVATAR_MAX) + '.svg';
-bigPictureElement.querySelector('.social__text').textContent = pictures[1].comments;
+var socialPictures = bigPictureElement.querySelectorAll('.social__picture');
+for (i = 0; i < socialPictures.length; i++) {
+  socialPictures[i].src = 'img/avatar-' + getRandom(AVATAR_MIN, AVATAR_MAX) + '.svg';
+}
 
-bigPictureElement.querySelector('.social__comment-count').classList.add('.visually-hidden');
-bigPictureElement.querySelector('.social__loadmore').classList.add('.visually-hidden');
+var socialText = bigPictureElement.querySelectorAll('.social__text');
+for (i = 0; i < socialText.length; i++) {
+  socialText[i].textContent = pictures[i].comments;
+}
+
+bigPictureElement.querySelector('.social__comment-count').classList.add('visually-hidden');
+bigPictureElement.querySelector('.social__loadmore').classList.add('visually-hidden');
