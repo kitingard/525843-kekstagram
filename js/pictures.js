@@ -114,38 +114,21 @@ for (i = 0; i < socialText.length; i++) {
 bigPictureElement.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPictureElement.querySelector('.social__loadmore').classList.add('visually-hidden');
 
+var imgUploadScale = document.querySelector('.img-upload__scale');
 var imgEffects = document.querySelector('.img-upload__preview img');
 var effectsList = document.querySelector('.effects__list');
-
-var effects = [
-  {
-    value: 'none',
-    selector: 'effects__preview--none'
-  },
-  {
-    value: 'chrome',
-    selector: 'effects__preview--chrome'
-  },
-  {
-    value: 'sepia',
-    selector: 'effects__preview--sepia'
-  },
-  {
-    value: 'marvin',
-    selector: 'effects__preview--marvin'
-  },
-  {
-    value: 'phobos',
-    selector: 'effects__preview--phobos'
-  },
-  {
-    value: 'heat',
-    selector: 'effects__preview--heat'
-  }
-];
+var effects = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 
 var getImgEffect = function (effectSelector) {
   imgEffects.classList.add(effectSelector);
+};
+
+var removeEffectClasses = function () {
+  for (i = 0; i < effects.length; i++) {
+    if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
+      imgEffects.classList.remove('effects__preview--' + effects[i]);
+    }
+  }
 };
 
 effectsList.addEventListener('click', function () {
@@ -153,10 +136,17 @@ effectsList.addEventListener('click', function () {
   if (targetEffect.value === 'UL') {
     return;
   } else {
-    for (i = 0; i < effects.length; i++) {
-      if (targetEffect.value === effects[i].value) {
-        getImgEffect(effects[i].selector);
+    if (imgEffects.classList.contains('effects__preview--none')) {
+      imgUploadScale.classList.add('hidden');
+    } else {
+      if (imgUploadScale.classList.contains('hidden')) {
+        imgUploadScale.classList.remove('hidden');
       }
+    }
+    removeEffectClasses();
+    getImgEffect('effects__preview--' + event.target.value);
+    if (imgEffects.classList.contains('effects__preview--none')) {
+      imgUploadScale.classList.add('hidden');
     }
   }
 });
