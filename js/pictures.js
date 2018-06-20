@@ -33,7 +33,7 @@ var getPictureElement = function (template, imgSelector, likesSelector, comments
 
     pictureLinkElement.querySelector(imgSelector).src = pictures[i].url;
     pictureLinkElement.querySelector(likesSelector).textContent = pictures[i].likes;
-    pictureLinkElement.querySelector(commentsSelector).textContent = pictures[i].comments;
+    pictureLinkElement.querySelector(commentsSelector).textContent = commentsList.length;
 
     element.appendChild(pictureLinkElement);
   }
@@ -42,9 +42,61 @@ var getPictureElement = function (template, imgSelector, likesSelector, comments
 getPictureElement(similarPictureLinkTemplate, 'img', '.picture__stat--likes', '.picture__stat--comments', similarPictureElement);
 
 var bigPictureElement = document.querySelector('.big-picture');
-bigPictureElement.classList.remove('hidden');
+var bigPictureCancel = document.querySelector('.big-picture__cancel');
+var body = document.querySelector('body');
+var uploadingFile = document.querySelector('#upload-file');
+var imgEditingPopup = document.querySelector('.img-upload__overlay');
+var imgEditingPopupCancel = document.querySelector('.img-upload__cancel');
+var ESC_KEYCODE = 27;
 
-bigPictureElement.querySelector('img').src = pictures[1].url;
+var openPopup = function (openableElement) {
+  openableElement.classList.remove('hidden');
+  body.classList.add('.modal-open');
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      if (openableElement === imgEditingPopup) {
+        uploadingFile.value = '';
+        closePopup(openableElement);
+      } else {
+        closePopup(openableElement);
+      }
+    }
+  });
+};
+
+var closePopup = function (closingElement) {
+  closingElement.classList.add('hidden');
+  body.classList.remove('.modal-open');
+  document.removeEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closePopup(closingElement);
+    }
+  });
+};
+
+similarPictureElement.addEventListener('click', function () {
+  var targetImg = event.target;
+  if (body.classList.contains('.modal-open')) {
+    return;
+  } else if (targetImg.tagName === 'IMG') {
+    bigPictureElement.querySelector('img').src = targetImg.src;
+    openPopup(bigPictureElement);
+  }
+});
+
+bigPictureCancel.addEventListener('click', function () {
+  closePopup(bigPictureElement);
+});
+
+uploadingFile.addEventListener('change', function () {
+  openPopup(imgEditingPopup);
+});
+
+imgEditingPopupCancel.addEventListener('click', function () {
+  closePopup(imgEditingPopup);
+  uploadingFile.value = '';
+});
+
 bigPictureElement.querySelector('.likes-count').textContent = pictures[1].likes;
 bigPictureElement.querySelector('.comments-count').textContent = commentsList.length;
 bigPictureElement.querySelector('.social__caption').textContent = pictures[1].description;
@@ -61,3 +113,40 @@ for (i = 0; i < socialText.length; i++) {
 
 bigPictureElement.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPictureElement.querySelector('.social__loadmore').classList.add('visually-hidden');
+
+var imgUploadScale = document.querySelector('.img-upload__scale');
+var imgEffects = document.querySelector('.img-upload__preview img');
+var effectsList = document.querySelector('.effects__list');
+var effects = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
+
+var getImgEffect = function (effectSelector) {
+  imgEffects.classList.add(effectSelector);
+};
+
+var removeEffectClasses = function () {
+  for (i = 0; i < effects.length; i++) {
+    if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
+      imgEffects.classList.remove('effects__preview--' + effects[i]);
+    }
+  }
+};
+
+effectsList.addEventListener('click', function () {
+  var targetEffect = event.target;
+  if (targetEffect.value === 'UL') {
+    return;
+  } else {
+    if (imgEffects.classList.contains('effects__preview--none')) {
+      imgUploadScale.classList.add('hidden');
+    } else {
+      if (imgUploadScale.classList.contains('hidden')) {
+        imgUploadScale.classList.remove('hidden');
+      }
+    }
+    removeEffectClasses();
+    getImgEffect('effects__preview--' + event.target.value);
+    if (imgEffects.classList.contains('effects__preview--none')) {
+      imgUploadScale.classList.add('hidden');
+    }
+  }
+});
