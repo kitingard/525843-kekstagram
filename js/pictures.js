@@ -189,8 +189,10 @@ var imgUploadSubmit = document.querySelector('.img-upload__submit');
 
 var getHashtagsValidation = function () {
   var hashtags = (textHashtags.value.split(' '));
+  var hashtagComparison = [];
   for (i = 0; i < hashtags.length; i++) {
     var hashtag = hashtags[i];
+
     if (hashtag.length < 2) {
       textHashtags.setCustomValidity('Имя должно состоять минимум из 2-х символов');
       getInvalidInput(textHashtags);
@@ -206,6 +208,11 @@ var getHashtagsValidation = function () {
     } else if (hashtags.length > 5) {
       textHashtags.setCustomValidity('Хэш-тегов не может быть больше пяти');
       getInvalidInput(textHashtags);
+    } else if (hashtagComparison.indexOf(hashtag.toLowerCase()) === -1) {
+      hashtagComparison.push(hashtag.toLowerCase());
+    } else {
+      textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+      getInvalidInput(textHashtags);
     }
   }
 };
@@ -216,4 +223,8 @@ var getInvalidInput = function (inputSelector) {
 
 imgUploadSubmit.addEventListener('click', function () {
   getHashtagsValidation();
+  textHashtags.addEventListener('change', function () {
+    textHashtags.setCustomValidity('');
+    textHashtags.style.borderColor = 'transparent';
+  });
 });
