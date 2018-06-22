@@ -155,6 +155,7 @@ effectsList.addEventListener('click', function () {
   }
 });
 
+var imgUploadPreview = document.querySelector('.img-upload__preview');
 var minusControl = document.querySelector('.resize__control--minus');
 var plusControl = document.querySelector('.resize__control--plus');
 var controlValue = document.querySelector('.resize__control--value');
@@ -166,7 +167,7 @@ minusControl.addEventListener('click', function () {
     return;
   } else {
     controlValue.value = parseInt(controlValue.value, RADIX_VALUE) - CONTROL_STEP + '%';
-    imgEffects.style.transform = 'scale(0.' + parseInt(controlValue.value, RADIX_VALUE) + ')';
+    imgUploadPreview.style.transform = 'scale(0.' + parseInt(controlValue.value, RADIX_VALUE) + ')';
   }
 });
 
@@ -176,9 +177,9 @@ plusControl.addEventListener('click', function () {
   } else {
     controlValue.value = parseInt(controlValue.value, RADIX_VALUE) + CONTROL_STEP + '%';
     if (controlValue.value === '100%') {
-      imgEffects.style.transform = 'scale(1)';
+      imgUploadPreview.style.transform = 'scale(1)';
     } else {
-      imgEffects.style.transform = 'scale(0.' + parseInt(controlValue.value, RADIX_VALUE) + ')';
+      imgUploadPreview.style.transform = 'scale(0.' + parseInt(controlValue.value, RADIX_VALUE) + ')';
     }
   }
 });
@@ -197,7 +198,7 @@ var getHashtagsValidation = function () {
       textHashtags.setCustomValidity('Имя должно состоять минимум из 2-х символов');
       getInvalidInput(textHashtags);
     } else if (hashtag.length > 20) {
-      textHashtags.setCustomValidity('Имя не должно превышать 25-ти символов');
+      textHashtags.setCustomValidity('Имя не должно превышать 20-ти символов, включая #');
       getInvalidInput(textHashtags);
     } else if (/,/.test(hashtag) === true) {
       textHashtags.setCustomValidity('Хэш-теги разделяются пробелами');
