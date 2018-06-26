@@ -155,6 +155,46 @@ effectsList.addEventListener('click', function () {
   }
 });
 
+var scaleLine = document.querySelector('.scale__line');
+var scalePin = document.querySelector('.scale__pin');
+var scaleLevel = document.querySelector('.scale__level');
+
+scalePin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoord = evt.clientX;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoord - moveEvt.clientX;
+
+    startCoord = moveEvt.clientX;
+
+    scalePin.style.left = (scalePin.offsetLeft - shift) + 'px';
+    scaleLevel.style.width = (scalePin.offsetLeft - shift) + 'px';
+
+    if (scalePin.style.left < '0px') {
+      scalePin.style.left = '0px';
+      scaleLevel.style.width = '0px';
+    }
+    if (scalePin.style.left > scaleLine.offsetWidth + 'px') {
+      scalePin.style.left = scaleLine.offsetWidth + 'px';
+      scaleLevel.style.width = scaleLine.offsetWidth + 'px';
+    }
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseUp', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
 var imgUploadPreview = document.querySelector('.img-upload__preview');
 var minusControl = document.querySelector('.resize__control--minus');
 var plusControl = document.querySelector('.resize__control--plus');
