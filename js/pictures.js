@@ -133,6 +133,9 @@ var removeEffectClasses = function () {
       imgEffects.classList.remove('effects__preview--' + effects[i]);
     }
   }
+  scalePin.style.left = scaleLine.offsetWidth + 'px';
+  scaleLevel.style.width = scaleLine.offsetWidth + 'px';
+  imgEffects.style.filter = '';
 };
 
 effectsList.addEventListener('click', function () {
@@ -158,34 +161,70 @@ effectsList.addEventListener('click', function () {
 var scaleLine = document.querySelector('.scale__line');
 var scalePin = document.querySelector('.scale__pin');
 var scaleLevel = document.querySelector('.scale__level');
+var scaleValue = document.querySelector('.scale__value');
 
 scalePin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-
-  var startCoord = evt.clientX;
+  var dragged = false;
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
+    dragged = true;
 
-    var shift = startCoord - moveEvt.clientX;
+    var coordX = moveEvt.clientX;
+    var scaleLineIndent = Math.round(scaleLine.getBoundingClientRect().left);
+    var scaleValueMax = scaleLine.offsetWidth - scalePin.offsetWidth / 2;
+    var SCALE_PIN_MIN = '0px';
+    var SCALE_VALUE_MIN = 0;
+    var MARVIN_FILTER_MAX = 100;
+    var PHOBOS_FILTER_MAX = 3;
+    var HEAT_FILTER_MAX = 3;
 
-    startCoord = moveEvt.clientX;
+    scalePin.style.left = (coordX - scaleLineIndent) + 'px';
+    scaleLevel.style.width = (coordX - scaleLineIndent) + 'px';
+    scaleValue.value = coordX - scaleLineIndent - scalePin.offsetWidth / 2;
 
-    scalePin.style.left = (scalePin.offsetLeft - shift) + 'px';
-    scaleLevel.style.width = (scalePin.offsetLeft - shift) + 'px';
-
-    if (scalePin.style.left < '0px') {
-      scalePin.style.left = '0px';
-      scaleLevel.style.width = '0px';
-    }
-    if (scalePin.style.left > scaleLine.offsetWidth + 'px') {
+    if (scalePin.style.left <= SCALE_PIN_MIN) {
+      scalePin.style.left = SCALE_PIN_MIN;
+      scaleLevel.style.width = SCALE_PIN_MIN;
+    } else if (scalePin.style.left >= scaleLine.offsetWidth + 'px') {
       scalePin.style.left = scaleLine.offsetWidth + 'px';
       scaleLevel.style.width = scaleLine.offsetWidth + 'px';
+    }
+
+    if (coordX - scaleLineIndent - scalePin.offsetWidth / 2 <= SCALE_VALUE_MIN) {
+      scaleValue.value = SCALE_VALUE_MIN;
+    } else if (coordX - scaleLineIndent - scalePin.offsetWidth / 2 >= scaleLine.offsetWidth) {
+      scaleValue.value = scaleValueMax;
+    }
+
+    for (i = 0; i < effects.length; i++) {
+      if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
+        if (effects[i] === 'chrome') {
+          imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
+        }
+        if (effects[i] === 'sepia') {
+          imgEffects.style.filter = 'sepia(' + (scaleValue.value / scaleValueMax) + ')';
+        }
+        if (effects[i] === 'marvin') {
+          imgEffects.style.filter = 'invert(' + (scaleValue.value * MARVIN_FILTER_MAX / scaleValueMax) + '%)';
+        }
+        if (effects[i] === 'phobos') {
+          imgEffects.style.filter = 'blur(' + (scaleValue.value * PHOBOS_FILTER_MAX / scaleValueMax) + 'px)';
+        }
+        if (effects[i] === 'heat') {
+          imgEffects.style.filter = 'brightness(' + (scaleValue.value * HEAT_FILTER_MAX / scaleValueMax) + ')';
+        }
+      }
     }
   };
 
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
+
+    if (dragged === false) {
+      scaleValue.value = evt.clientX - Math.round(scaleLine.getBoundingClientRect().left) - scalePin.offsetWidth / 2;
+    }
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseUp', onMouseUp);
