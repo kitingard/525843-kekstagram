@@ -94,6 +94,7 @@ bigPictureCancel.addEventListener('click', function () {
 
 uploadingFile.addEventListener('change', function () {
   openPopup(imgEditingPopup);
+  imgUploadScale.classList.add('hidden');
 });
 
 imgEditingPopupCancel.addEventListener('click', function () {
@@ -174,46 +175,50 @@ scalePin.addEventListener('mousedown', function (evt) {
     var coordX = moveEvt.clientX;
     var scaleLineIndent = Math.round(scaleLine.getBoundingClientRect().left);
     var scaleValueMax = scaleLine.offsetWidth - scalePin.offsetWidth / 2;
-    var SCALE_PIN_MIN = '0px';
+    var SCALE_PIN_MIN = 0;
     var SCALE_VALUE_MIN = 0;
     var MARVIN_FILTER_MAX = 100;
     var PHOBOS_FILTER_MAX = 3;
     var HEAT_FILTER_MAX = 3;
+    var scaleMoveСalculation = (coordX - scaleLineIndent) + 'px';
+    var scaleValueСalculation = coordX - scaleLineIndent - scalePin.offsetWidth / 2;
 
-    scalePin.style.left = (coordX - scaleLineIndent) + 'px';
-    scaleLevel.style.width = (coordX - scaleLineIndent) + 'px';
-    scaleValue.value = coordX - scaleLineIndent - scalePin.offsetWidth / 2;
+    scalePin.style.left = scaleMoveСalculation;
+    scaleLevel.style.width = scaleMoveСalculation;
+    scaleValue.value = scaleValueСalculation;
 
-    if (scalePin.style.left <= SCALE_PIN_MIN) {
+    if (parseInt(scalePin.style.left, RADIX_VALUE) <= SCALE_PIN_MIN) {
       scalePin.style.left = SCALE_PIN_MIN;
       scaleLevel.style.width = SCALE_PIN_MIN;
-    } else if (scalePin.style.left >= scaleLine.offsetWidth + 'px') {
+    } else if (parseInt(scalePin.style.left, RADIX_VALUE) >= parseInt(scaleLine.offsetWidth, RADIX_VALUE)) {
       scalePin.style.left = scaleLine.offsetWidth + 'px';
       scaleLevel.style.width = scaleLine.offsetWidth + 'px';
     }
 
-    if (coordX - scaleLineIndent - scalePin.offsetWidth / 2 <= SCALE_VALUE_MIN) {
+    if (scaleValue.value <= SCALE_VALUE_MIN) {
       scaleValue.value = SCALE_VALUE_MIN;
-    } else if (coordX - scaleLineIndent - scalePin.offsetWidth / 2 >= scaleLine.offsetWidth) {
+    } else if (scaleValue.value >= parseInt(scaleLine.offsetWidth, RADIX_VALUE)) {
       scaleValue.value = scaleValueMax;
     }
 
     for (i = 0; i < effects.length; i++) {
       if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
-        if (effects[i] === 'chrome') {
-          imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
-        }
-        if (effects[i] === 'sepia') {
-          imgEffects.style.filter = 'sepia(' + (scaleValue.value / scaleValueMax) + ')';
-        }
-        if (effects[i] === 'marvin') {
-          imgEffects.style.filter = 'invert(' + (scaleValue.value * MARVIN_FILTER_MAX / scaleValueMax) + '%)';
-        }
-        if (effects[i] === 'phobos') {
-          imgEffects.style.filter = 'blur(' + (scaleValue.value * PHOBOS_FILTER_MAX / scaleValueMax) + 'px)';
-        }
-        if (effects[i] === 'heat') {
-          imgEffects.style.filter = 'brightness(' + (scaleValue.value * HEAT_FILTER_MAX / scaleValueMax) + ')';
+        switch (effects[i]) {
+          case ('chrome'):
+            imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
+            break;
+          case ('sepia'):
+            imgEffects.style.filter = 'sepia(' + (scaleValue.value / scaleValueMax) + ')';
+            break;
+          case ('marvin'):
+            imgEffects.style.filter = 'invert(' + (scaleValue.value * MARVIN_FILTER_MAX / scaleValueMax) + '%)';
+            break;
+          case ('phobos'):
+            imgEffects.style.filter = 'blur(' + (scaleValue.value * PHOBOS_FILTER_MAX / scaleValueMax) + 'px)';
+            break;
+          case ('heat'):
+            imgEffects.style.filter = 'brightness(' + (scaleValue.value * HEAT_FILTER_MAX / scaleValueMax) + ')';
+            break;
         }
       }
     }
@@ -273,7 +278,9 @@ var getHashtagsValidation = function () {
   for (i = 0; i < hashtags.length; i++) {
     var hashtag = hashtags[i];
 
-    if (hashtag.length < 2) {
+    if (hashtag.length === 0) {
+      return;
+    } else if (hashtag.length < 2) {
       textHashtags.setCustomValidity('Имя должно состоять минимум из 2-х символов');
       getInvalidInput(textHashtags);
     } else if (hashtag.length > 20) {
