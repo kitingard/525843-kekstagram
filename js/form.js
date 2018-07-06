@@ -3,11 +3,11 @@
 (function () {
   window.textHashtags = document.querySelector('.text__hashtags');
   window.textDescription = document.querySelector('.text__description');
-  var imgUploadSubmit = document.querySelector('.img-upload__submit');
+  window.imgUploadSubmit = document.querySelector('.img-upload__submit');
+  var imgUploadForm = document.querySelector('.img-upload__form');
   var HASHTAG_MIN_LENGTH = 2;
   var HASHTAG_MAX_LENGTH = 20;
   var HASHTAG_MAX = 5;
-
 
   var getHashtagsValidation = function () {
     var hashtags = (window.textHashtags.value.split(' '));
@@ -45,11 +45,19 @@
     inputSelector.style.borderColor = 'red';
   };
 
-  imgUploadSubmit.addEventListener('click', function () {
+  window.imgUploadSubmit.addEventListener('click', function () {
     getHashtagsValidation();
     window.textHashtags.addEventListener('change', function () {
       window.textHashtags.setCustomValidity('');
       window.textHashtags.style.borderColor = 'transparent';
     });
   });
+
+  imgUploadForm.addEventListener('submit', function (evt) {
+    window.save(new FormData(imgUploadForm), function () {
+      window.closePopup(window.imgEditingPopup);
+    });
+    evt.preventDefault();
+  });
+
 })();
