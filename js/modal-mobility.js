@@ -8,6 +8,7 @@
   window.imgUploadScale = document.querySelector('.img-upload__scale');
   window.bodyTag = document.querySelector('body');
   window.ESC_KEYCODE = 27;
+  window.bigPictureElement = document.querySelector('.big-picture');
 
   var openPopup = function (openableElement) {
     openableElement.classList.remove('hidden');

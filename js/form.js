@@ -12,7 +12,7 @@
   var getHashtagsValidation = function () {
     var hashtags = (window.textHashtags.value.split(' '));
     var hashtagComparison = [];
-    for (window.i = 0; window.i < hashtags.length; window.i++) {
+    for (var i = 0; i < hashtags.length; i++) {
       var hashtag = hashtags[window.i];
 
       if (hashtag.length === 0) {
