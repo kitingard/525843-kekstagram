@@ -7,12 +7,13 @@
   var bigPicturePreview = document.querySelector('.big-picture__preview');
   var bigPictureSocial = bigPicturePreview.querySelector('.big-picture__social');
 
-  var getPictureInfo = function (pictures) {
+  var deleteComments = function (array, parent) {
+    for (var i = 0; i < array.length; i++) {
+      parent.removeChild(array[i]);
+    }
+  };
 
-    // var socialComment = bigPictureSocial.querySelectorAll('.social__comment');
-    // for (var i = 0; i < socialComment.length; i++) {
-    //   socialComment[i].remove();
-    // };
+  var getPictureInfo = function (pictures) {
 
     window.similarPictureElement.addEventListener('click', function () {
       var targetLink = event.target;
@@ -44,7 +45,33 @@
         }
 
         var socialComments = bigPictureLinkElement.querySelector('.social__comments');
+        var commentsNodeList = bigPictureLinkElement.querySelectorAll('.social__comment');
+        var commentsArray = Array.from(commentsNodeList);
+
+        deleteComments(commentsArray, socialComments);
+
         socialComments.appendChild(socialFragment);
+
+        commentsNodeList = bigPictureLinkElement.querySelectorAll('.social__comment');
+        commentsArray = Array.from(commentsNodeList);
+
+        if (picture.comments.length > 5) {
+          for (i = 5; i < picture.comments.length; i++) {
+            commentsArray[i].classList.add('visually-hidden');
+            bigPictureLinkElement.querySelector('.social__comment-count').classList.remove('visually-hidden');
+            bigPictureLinkElement.querySelector('.social__loadmore').classList.remove('visually-hidden');
+          }
+          bigPictureLinkElement.querySelector('.social__loadmore').addEventListener('click', function () {
+            for (i = 5; i < picture.comments.length; i++) {
+              commentsArray[i].classList.remove('visually-hidden');
+              bigPictureLinkElement.querySelector('.social__comment-count').classList.add('visually-hidden');
+              bigPictureLinkElement.querySelector('.social__loadmore').classList.add('visually-hidden');
+            }
+          });
+        } else {
+          bigPictureLinkElement.querySelector('.social__comment-count').classList.add('visually-hidden');
+          bigPictureLinkElement.querySelector('.social__loadmore').classList.add('visually-hidden');
+        }
 
         return bigPictureLinkElement;
       };
@@ -58,7 +85,4 @@
   };
 
   window.load(getPictureInfo);
-
-  window.bigPictureElement.querySelector('.social__comment-count').classList.add('visually-hidden');
-  window.bigPictureElement.querySelector('.social__loadmore').classList.add('visually-hidden');
 })();

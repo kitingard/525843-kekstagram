@@ -8,7 +8,7 @@
   window.imgUploadScale = document.querySelector('.img-upload__scale');
   window.bodyTag = document.querySelector('body');
   window.ESC_KEYCODE = 27;
-  window.bigPictureElement = document.querySelector('.big-picture');
+  var bigPictureElement = document.querySelector('.big-picture');
 
   var openPopup = function (openableElement) {
     openableElement.classList.remove('hidden');
@@ -47,14 +47,14 @@
     if (window.bodyTag.classList.contains('.modal-open')) {
       return;
     } else if (targetImg.tagName === 'IMG') {
-      window.bigPictureElement.querySelector('img').src = targetImg.src;
-      openPopup(window.bigPictureElement);
-      onEscPress(window.bigPictureElement);
+      bigPictureElement.querySelector('img').src = targetImg.src;
+      openPopup(bigPictureElement);
+      onEscPress(bigPictureElement);
     }
   });
 
   bigPictureCancel.addEventListener('click', function () {
-    window.closePopup(window.bigPictureElement);
+    window.closePopup(bigPictureElement);
   });
 
   window.uploadingFile.addEventListener('change', function () {
