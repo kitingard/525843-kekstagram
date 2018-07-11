@@ -10,7 +10,7 @@
   };
 
   var removeEffectClasses = function () {
-    for (window.i = 0; window.i < effects.length; window.i++) {
+    for (var i = 0; i < effects.length; i++) {
       if (imgEffects.classList.contains('effects__preview--' + effects[window.i])) {
         imgEffects.classList.remove('effects__preview--' + effects[window.i]);
       }
