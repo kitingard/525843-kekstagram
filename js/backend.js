@@ -3,29 +3,8 @@
 (function () {
   var POST_URL = 'https://js.dump.academy/kekstagram';
   var GET_URL = 'https://js.dump.academy/kekstagram/data';
-  var errorMessageParent = document.querySelector('.img-upload__text');
 
-  var onError = function (message) {
-    var div = document.createElement('div');
-    div.innerHTML = message;
-    div.style.textAlign = 'center';
-    div.style.color = 'yellow';
-    div.style.fontWeight = 'bold';
-    div.style.backgroundColor = 'rgba(255, 248, 200, 0.5)';
-    div.style.width = '180px';
-    div.style.height = '50px';
-    div.style.marginLeft = '200px';
-    div.style.paddingTop = '15px';
-    div.style.borderRadius = '10px';
-
-    errorMessageParent.insertBefore(div, window.imgUploadSubmit.children[2]);
-
-    setTimeout(function () {
-      div.parentNode.removeChild(div);
-    }, 10000);
-  };
-
-  window.save = function (data, onLoad) {
+  window.save = function (data, onLoad, onError) {
     var xhrSave = new XMLHttpRequest();
     xhrSave.responseType = 'json';
 
@@ -63,7 +42,7 @@
     xhrSave.send(data);
   };
 
-  window.load = function (onLoad) {
+  window.load = function (onLoad, onError) {
     var xhrLoad = new XMLHttpRequest();
     xhrLoad.responseType = 'json';
 

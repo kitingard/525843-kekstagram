@@ -7,12 +7,6 @@
   var bigPicturePreview = document.querySelector('.big-picture__preview');
   var bigPictureSocial = bigPicturePreview.querySelector('.big-picture__social');
 
-  var deleteComments = function (array, parent) {
-    for (var i = 0; i < array.length; i++) {
-      parent.removeChild(array[i]);
-    }
-  };
-
   var getPictureInfo = function (pictures) {
 
     window.similarPictureElement.addEventListener('click', function () {
@@ -48,7 +42,7 @@
         var commentsNodeList = bigPictureLinkElement.querySelectorAll('.social__comment');
         var commentsArray = Array.from(commentsNodeList);
 
-        deleteComments(commentsArray, socialComments);
+        window.deleteElement(commentsArray, socialComments);
 
         socialComments.appendChild(socialFragment);
 

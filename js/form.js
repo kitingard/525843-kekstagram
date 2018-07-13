@@ -41,6 +41,27 @@
     }
   };
 
+  var onProblem = function (message) {
+    var errorMessageParent = document.querySelector('.img-upload__text');
+    var div = document.createElement('div');
+    div.innerHTML = message;
+    div.style.textAlign = 'center';
+    div.style.color = 'yellow';
+    div.style.fontWeight = 'bold';
+    div.style.backgroundColor = 'rgba(255, 248, 200, 0.5)';
+    div.style.width = '180px';
+    div.style.height = '50px';
+    div.style.marginLeft = '200px';
+    div.style.paddingTop = '15px';
+    div.style.borderRadius = '10px';
+
+    errorMessageParent.insertBefore(div, window.imgUploadSubmit.children[2]);
+
+    setTimeout(function () {
+      div.parentNode.removeChild(div);
+    }, 10000);
+  };
+
   var getInvalidInput = function (inputSelector) {
     inputSelector.style.borderColor = 'red';
   };
@@ -56,7 +77,7 @@
   imgUploadForm.addEventListener('submit', function (evt) {
     window.save(new FormData(imgUploadForm), function () {
       window.closePopup(window.imgEditingPopup);
-    });
+    }, onProblem);
     evt.preventDefault();
   });
 
