@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
+  var CONTROL_STEP = 25;
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var minusControl = document.querySelector('.resize__control--minus');
   var plusControl = document.querySelector('.resize__control--plus');
   var controlValue = document.querySelector('.resize__control--value');
-  var CONTROL_STEP = 25;
 
   minusControl.addEventListener('click', function () {
     if (controlValue.value === '25%') {

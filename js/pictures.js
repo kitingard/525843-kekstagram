@@ -1,8 +1,14 @@
 'use strict';
 
 (function () {
+  var NEW_LENGHT = 10;
   window.similarPictureElement = document.querySelector('.pictures');
   var similarPictureLinkTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
+  var imgFiltersForm = document.querySelector('.img-filters__form');
+  var filterPopular = document.querySelector('#filter-popular');
+  var filterNew = document.querySelector('#filter-new');
+  var filterDiscussed = document.querySelector('#filter-discussed');
+  var pictures = [];
 
   window.getRandom = function (min, max) {
     return (Math.round(Math.random() * (max - min) + min));
@@ -18,22 +24,15 @@
     return window.pictureLinkElement;
   };
 
-  var getPictures = function (pictures) {
+  var getPictures = function (array) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pictures.length; i++) {
-      fragment.appendChild(renderPictures(pictures[i]));
+    for (var i = 0; i < array.length; i++) {
+      fragment.appendChild(renderPictures(array[i]));
       window.pictureLinkElement.setAttribute('data-index', i);
     }
     window.similarPictureElement.appendChild(fragment);
   };
-
-  var imgFiltersForm = document.querySelector('.img-filters__form');
-  var filterPopular = document.querySelector('#filter-popular');
-  var filterNew = document.querySelector('#filter-new');
-  var filterDiscussed = document.querySelector('#filter-discussed');
-  var NEW_LENGHT = 10;
-  var pictures = [];
 
   var getActive = function (activeButton, buttonOffOne, buttonOffTwo) {
     if (activeButton.classList.contains('img-filters__button--active') === false) {
@@ -72,9 +71,13 @@
           window.deleteElement(imagesArray, window.similarPictureElement);
 
           var picturesNew = [];
-          for (var i = 0; i < NEW_LENGHT; i++) {
-            picturesNew[i] = pictures[window.getRandom(0, pictures.length - 1)];
+          for (var a = 0; picturesNew.length < NEW_LENGHT; a++) {
+            picturesNew[a] = pictures[window.getRandom(0, pictures.length - 1)];
+            picturesNew = picturesNew.filter(function (it, i) {
+              return picturesNew.indexOf(it) === i;
+            });
           }
+
           filterArray = picturesNew;
           getPictures(filterArray);
           break;
@@ -82,11 +85,11 @@
           getActive(filterDiscussed, filterNew, filterPopular);
           window.deleteElement(imagesArray, window.similarPictureElement);
 
-          var likesPictures = function (likesA, likesB) {
-            return likesB.likes - likesA.likes;
+          var discussedPictures = function (commentsA, commentsB) {
+            return commentsB.comments.length - commentsA.comments.length;
           };
 
-          var picturesDiscussed = pictures.slice().sort(likesPictures);
+          var picturesDiscussed = pictures.slice().sort(discussedPictures);
           filterArray = picturesDiscussed;
           getPictures(filterArray);
           break;

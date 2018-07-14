@@ -1,18 +1,24 @@
 'use strict';
 
 (function () {
+  window.RADIX_VALUE = 10;
   var imgEffects = document.querySelector('.img-upload__preview img');
   var effectsList = document.querySelector('.effects__list');
   var effects = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
+  var scaleLine = document.querySelector('.scale__line');
+  var scalePin = document.querySelector('.scale__pin');
+  var scaleLevel = document.querySelector('.scale__level');
+  var scaleValue = document.querySelector('.scale__value');
 
   var getImgEffect = function (effectSelector) {
     imgEffects.classList.add(effectSelector);
   };
 
-  var removeEffectClasses = function () {
+  window.removeEffectClasses = function () {
     for (var i = 0; i < effects.length; i++) {
-      if (imgEffects.classList.contains('effects__preview--' + effects[window.i])) {
-        imgEffects.classList.remove('effects__preview--' + effects[window.i]);
+      if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
+        imgEffects.classList.remove('effects__preview--' + effects[i]);
+        imgEffects.style.filter = '';
       }
     }
   };
@@ -29,7 +35,7 @@
           window.imgUploadScale.classList.remove('hidden');
         }
       }
-      removeEffectClasses();
+      window.removeEffectClasses();
       scalePin.style.left = scaleLine.offsetWidth + 'px';
       scaleLevel.style.width = scaleLine.offsetWidth + 'px';
       imgEffects.style.filter = '';
@@ -39,12 +45,6 @@
       }
     }
   });
-
-  var scaleLine = document.querySelector('.scale__line');
-  var scalePin = document.querySelector('.scale__pin');
-  var scaleLevel = document.querySelector('.scale__level');
-  var scaleValue = document.querySelector('.scale__value');
-  window.RADIX_VALUE = 10;
 
   scalePin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -83,9 +83,9 @@
         scaleValue.value = scaleValueMax;
       }
 
-      for (window.i = 0; window.i < effects.length; window.i++) {
-        if (imgEffects.classList.contains('effects__preview--' + effects[window.i])) {
-          switch (effects[window.i]) {
+      for (var i = 0; i < effects.length; i++) {
+        if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
+          switch (effects[i]) {
             case ('chrome'):
               imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
               break;

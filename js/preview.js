@@ -14,6 +14,8 @@
       if (targetLink.tagName === 'IMG') {
         var targetLinkElement = targetLink.parentElement;
         var targetLinkIndex = targetLinkElement.getAttribute('data-index');
+      } else {
+        return;
       }
 
       var renderPicture = function (picture) {
