@@ -13,8 +13,8 @@
   var getHashtagsValidation = function () {
     var hashtags = (window.textHashtags.value.split(' '));
     var hashtagComparison = [];
-    for (var i = 0; i < hashtags.length; i++) {
-      var hashtag = hashtags[i];
+    hashtags.forEach(function (item) {
+      var hashtag = item;
 
       if (hashtag.length === 0) {
         return;
@@ -39,7 +39,7 @@
         window.textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
         getInvalidInput(window.textHashtags);
       }
-    }
+    });
   };
 
   var onProblem = function (message) {

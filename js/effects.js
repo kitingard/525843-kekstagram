@@ -2,6 +2,11 @@
 
 (function () {
   window.RADIX_VALUE = 10;
+  var SCALE_PIN_MIN = 0;
+  var SCALE_VALUE_MIN = 0;
+  var MARVIN_FILTER_MAX = 100;
+  var PHOBOS_FILTER_MAX = 3;
+  var HEAT_FILTER_MAX = 3;
   var imgEffects = document.querySelector('.img-upload__preview img');
   var effectsList = document.querySelector('.effects__list');
   var effects = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
@@ -15,12 +20,12 @@
   };
 
   window.removeEffectClasses = function () {
-    for (var i = 0; i < effects.length; i++) {
-      if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
-        imgEffects.classList.remove('effects__preview--' + effects[i]);
+    effects.forEach(function (item) {
+      if (imgEffects.classList.contains('effects__preview--' + item)) {
+        imgEffects.classList.remove('effects__preview--' + item);
         imgEffects.style.filter = '';
       }
-    }
+    });
   };
 
   effectsList.addEventListener('click', function () {
@@ -57,11 +62,6 @@
       var coordX = moveEvt.clientX;
       var scaleLineIndent = Math.round(scaleLine.getBoundingClientRect().left);
       var scaleValueMax = scaleLine.offsetWidth - scalePin.offsetWidth / 2;
-      var SCALE_PIN_MIN = 0;
-      var SCALE_VALUE_MIN = 0;
-      var MARVIN_FILTER_MAX = 100;
-      var PHOBOS_FILTER_MAX = 3;
-      var HEAT_FILTER_MAX = 3;
       var scaleMoveСalculation = (coordX - scaleLineIndent) + 'px';
       var scaleValueСalculation = coordX - scaleLineIndent - scalePin.offsetWidth / 2;
 
@@ -83,9 +83,9 @@
         scaleValue.value = scaleValueMax;
       }
 
-      for (var i = 0; i < effects.length; i++) {
-        if (imgEffects.classList.contains('effects__preview--' + effects[i])) {
-          switch (effects[i]) {
+      effects.forEach(function (item) {
+        if (imgEffects.classList.contains('effects__preview--' + item)) {
+          switch (item) {
             case ('chrome'):
               imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
               break;
@@ -103,7 +103,7 @@
               break;
           }
         }
-      }
+      });
     };
 
     var onMouseUp = function (upEvt) {
