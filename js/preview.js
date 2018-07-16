@@ -20,7 +20,6 @@
     var renderPicture = function (picture) {
       var bigPictureLinkElement = bigPictureSocial.cloneNode(true);
       var openCommentsCount = bigPictureLinkElement.querySelector('.social__comment-count');
-      var commentsCount = bigPictureLinkElement.querySelector('.comments-count');
 
       var renderSocial = function (item) {
         var socialCommentElement = bigPictureLinkElement.querySelector('.social__comment').cloneNode(true);
@@ -59,7 +58,7 @@
         });
 
         if (hiddenComments.length > DEFAULT_OPEN_COMMENTS_VALUE) {
-          openCommentsCount.textContent = array.length - hiddenComments.length + DEFAULT_OPEN_COMMENTS_VALUE + ' из ' + commentsCount.textContent + ' комментариев';
+          openCommentsCount.innerHTML = (array.length - hiddenComments.length + DEFAULT_OPEN_COMMENTS_VALUE) + ' из <span class="comments-count">' + array.length + '</span> комментариев';
           for (i = 0; i < DEFAULT_OPEN_COMMENTS_VALUE; i++) {
             hiddenComments[i].classList.remove('visually-hidden');
           }
@@ -76,7 +75,7 @@
       } else {
         bigPictureLinkElement.querySelector('.social__comment-count').classList.remove('visually-hidden');
         bigPictureLinkElement.querySelector('.social__loadmore').classList.remove('visually-hidden');
-        commentsCount.textContent = commentsArray.length;
+        openCommentsCount.innerHTML = DEFAULT_OPEN_COMMENTS_VALUE + ' из <span class="comments-count">' + commentsArray.length + '</span> комментариев';
         for (var i = DEFAULT_OPEN_COMMENTS_VALUE; i < commentsArray.length; i++) {
           commentsArray[i].classList.add('visually-hidden');
         }

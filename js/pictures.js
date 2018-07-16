@@ -51,12 +51,11 @@
     });
   };
 
-  var getFilter = function () {
-    var targetFilter = event.target;
+  var getFilter = function (filterId) {
     var imagesNodeList = window.similarPictureElement.querySelectorAll('a');
     var imagesArray = Array.from(imagesNodeList);
 
-    switch (targetFilter.id) {
+    switch (filterId) {
       case 'filter-popular':
         getActive(filterPopular, filterNew, filterDiscussed);
         window.deleteElement(imagesArray, window.similarPictureElement);
@@ -101,12 +100,14 @@
     }
 
     imgFiltersForm.addEventListener('click', function () {
-      getFilter();
+      var targetFilter = event.target;
+      window.debounce(getFilter(targetFilter.id));
     });
 
     if (window.bodyTag.classList.contains('modal-open')) {
       imgFiltersForm.removeEventListener('click', function () {
-        getFilter();
+        var targetFilter = event.target;
+        window.debounce(getFilter(targetFilter.id));
       });
     }
   };
