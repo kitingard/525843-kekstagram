@@ -73,6 +73,16 @@
       window.textHashtags.setCustomValidity('');
       window.textHashtags.style.borderColor = 'transparent';
     });
+
+    if (window.bodyTag.classList.contains('modal-open') === false) {
+      window.imgUploadSubmit.removeEventListener('click', function () {
+        getHashtagsValidation();
+        window.textHashtags.removeEventListener('change', function () {
+          window.textHashtags.setCustomValidity('');
+          window.textHashtags.style.borderColor = 'transparent';
+        });
+      });
+    }
   });
 
   imgUploadForm.addEventListener('submit', function (evt) {
@@ -83,5 +93,4 @@
     }, onProblem);
     evt.preventDefault();
   });
-
 })();

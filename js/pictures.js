@@ -32,6 +32,7 @@
     array.forEach(function (item, i) {
       fragment.appendChild(renderPictures(item));
       window.pictureLinkElement.setAttribute('data-index', i);
+      pictures.push(window.pictureLinkElement);
     });
 
     window.similarPictureElement.appendChild(fragment);
@@ -61,7 +62,6 @@
         window.deleteElement(imagesArray, window.similarPictureElement);
 
         filterArray = pictures;
-        getPictures(filterArray);
         break;
       case 'filter-new':
         getActive(filterNew, filterPopular, filterDiscussed);
@@ -75,41 +75,40 @@
           });
         }
         filterArray = picturesNew;
-        getPictures(filterArray);
         break;
       case 'filter-discussed':
         getActive(filterDiscussed, filterNew, filterPopular);
         window.deleteElement(imagesArray, window.similarPictureElement);
 
         var discussedPictures = function (commentsA, commentsB) {
-          return commentsB.comments.length - commentsA.comments.length;
+          return commentsB.querySelector('.picture__stat--comments').textContent - commentsA.querySelector('.picture__stat--comments').textContent;
         };
         var picturesDiscussed = pictures.slice().sort(discussedPictures);
         filterArray = picturesDiscussed;
-        getPictures(filterArray);
         break;
     }
+
+    filterArray.forEach(function (item) {
+      window.similarPictureElement.appendChild(item);
+    });
   };
 
   var onSuccess = function (data) {
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-    pictures = data;
+    getPictures(data);
 
     if (filterPopular.classList.contains('img-filters__button--active')) {
-      getPictures(pictures);
+      filterArray = pictures;
     }
 
     imgFiltersForm.addEventListener('click', function () {
       var targetFilter = event.target;
-      window.debounce(getFilter(targetFilter.id));
-    });
 
-    if (window.bodyTag.classList.contains('modal-open')) {
-      imgFiltersForm.removeEventListener('click', function () {
-        var targetFilter = event.target;
-        window.debounce(getFilter(targetFilter.id));
+      var debounceFunct = window.debounce(function () {
+        getFilter(targetFilter.id);
       });
-    }
+      debounceFunct();
+    });
   };
 
 

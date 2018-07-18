@@ -37,7 +37,16 @@
     window.bodyTag.classList.remove('modal-open');
     document.removeEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        window.closePopup(closingElement);
+        if (window.textHashtags === evt.target || window.textDescription === evt.target) {
+          return;
+        } else {
+          if (closingElement === window.imgEditingPopup) {
+            window.uploadingFile.value = '';
+            window.closePopup(closingElement);
+          } else {
+            window.closePopup(closingElement);
+          }
+        }
       }
     });
   };
