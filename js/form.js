@@ -89,6 +89,8 @@
     window.save(new FormData(imgUploadForm), function () {
       window.removeEffectClasses();
       window.closePopup(window.imgEditingPopup);
+      window.textHashtags.value = '';
+      window.textDescription.value = '';
       imgUploadInput.value = '';
     }, onProblem);
     evt.preventDefault();
