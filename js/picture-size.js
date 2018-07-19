@@ -1,14 +1,16 @@
 'use strict';
 
 (function () {
+  var CONTROL_STEP = 25;
+  var MIN_VALUE = '25%';
+  var MAX_VALUE = '100%';
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var minusControl = document.querySelector('.resize__control--minus');
   var plusControl = document.querySelector('.resize__control--plus');
   var controlValue = document.querySelector('.resize__control--value');
-  var CONTROL_STEP = 25;
 
   minusControl.addEventListener('click', function () {
-    if (controlValue.value === '25%') {
+    if (controlValue.value === MIN_VALUE) {
       return;
     } else {
       controlValue.value = parseInt(controlValue.value, window.RADIX_VALUE) - CONTROL_STEP + '%';
@@ -17,11 +19,11 @@
   });
 
   plusControl.addEventListener('click', function () {
-    if (controlValue.value === '100%') {
+    if (controlValue.value === MAX_VALUE) {
       return;
     } else {
       controlValue.value = parseInt(controlValue.value, window.RADIX_VALUE) + CONTROL_STEP + '%';
-      if (controlValue.value === '100%') {
+      if (controlValue.value === MAX_VALUE) {
         imgUploadPreview.style.transform = 'scale(1)';
       } else {
         imgUploadPreview.style.transform = 'scale(0.' + parseInt(controlValue.value, window.RADIX_VALUE) + ')';

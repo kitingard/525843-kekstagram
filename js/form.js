@@ -1,19 +1,20 @@
 'use strict';
 
 (function () {
+  var HASHTAG_MIN_LENGTH = 2;
+  var HASHTAG_MAX_LENGTH = 20;
+  var HASHTAG_MAX = 5;
   window.textHashtags = document.querySelector('.text__hashtags');
   window.textDescription = document.querySelector('.text__description');
   window.imgUploadSubmit = document.querySelector('.img-upload__submit');
   var imgUploadForm = document.querySelector('.img-upload__form');
-  var HASHTAG_MIN_LENGTH = 2;
-  var HASHTAG_MAX_LENGTH = 20;
-  var HASHTAG_MAX = 5;
+  var imgUploadInput = document.querySelector('.img-upload__input');
 
   var getHashtagsValidation = function () {
     var hashtags = (window.textHashtags.value.split(' '));
     var hashtagComparison = [];
-    for (var i = 0; i < hashtags.length; i++) {
-      var hashtag = hashtags[window.i];
+    hashtags.forEach(function (item) {
+      var hashtag = item;
 
       if (hashtag.length === 0) {
         return;
@@ -38,7 +39,28 @@
         window.textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
         getInvalidInput(window.textHashtags);
       }
-    }
+    });
+  };
+
+  var onProblem = function (message) {
+    var errorMessageParent = document.querySelector('.img-upload__text');
+    var div = document.createElement('div');
+    div.innerHTML = message;
+    div.style.textAlign = 'center';
+    div.style.color = 'yellow';
+    div.style.fontWeight = 'bold';
+    div.style.backgroundColor = 'rgba(255, 248, 200, 0.5)';
+    div.style.width = '180px';
+    div.style.height = '50px';
+    div.style.marginLeft = '200px';
+    div.style.paddingTop = '15px';
+    div.style.borderRadius = '10px';
+
+    errorMessageParent.insertBefore(div, window.imgUploadSubmit.children[2]);
+
+    setTimeout(function () {
+      div.parentNode.removeChild(div);
+    }, 10000);
   };
 
   var getInvalidInput = function (inputSelector) {
@@ -51,13 +73,26 @@
       window.textHashtags.setCustomValidity('');
       window.textHashtags.style.borderColor = 'transparent';
     });
+
+    if (window.bodyTag.classList.contains('modal-open') === false) {
+      window.imgUploadSubmit.removeEventListener('click', function () {
+        getHashtagsValidation();
+        window.textHashtags.removeEventListener('change', function () {
+          window.textHashtags.setCustomValidity('');
+          window.textHashtags.style.borderColor = 'transparent';
+        });
+      });
+    }
   });
 
   imgUploadForm.addEventListener('submit', function (evt) {
     window.save(new FormData(imgUploadForm), function () {
+      window.removeEffectClasses();
       window.closePopup(window.imgEditingPopup);
-    });
+      window.textHashtags.value = '';
+      window.textDescription.value = '';
+      imgUploadInput.value = '';
+    }, onProblem);
     evt.preventDefault();
   });
-
 })();

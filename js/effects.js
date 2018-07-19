@@ -1,50 +1,64 @@
 'use strict';
 
 (function () {
+  window.RADIX_VALUE = 10;
+  var SCALE_PIN_MIN = 0;
+  var SCALE_VALUE_MIN = 0;
+  var MARVIN_FILTER_MAX = 100;
+  var PHOBOS_FILTER_MAX = 3;
+  var HEAT_FILTER_MAX = 3;
   var imgEffects = document.querySelector('.img-upload__preview img');
   var effectsList = document.querySelector('.effects__list');
   var effects = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
+  var scaleLine = document.querySelector('.scale__line');
+  var scalePin = document.querySelector('.scale__pin');
+  var scaleLevel = document.querySelector('.scale__level');
+  var scaleValue = document.querySelector('.scale__value');
 
   var getImgEffect = function (effectSelector) {
     imgEffects.classList.add(effectSelector);
   };
 
-  var removeEffectClasses = function () {
-    for (var i = 0; i < effects.length; i++) {
-      if (imgEffects.classList.contains('effects__preview--' + effects[window.i])) {
-        imgEffects.classList.remove('effects__preview--' + effects[window.i]);
+  window.removeEffectClasses = function () {
+    effects.forEach(function (item) {
+      if (imgEffects.classList.contains('effects__preview--' + item)) {
+        imgEffects.classList.remove('effects__preview--' + item);
+        imgEffects.style.filter = '';
       }
-    }
+    });
   };
 
   effectsList.addEventListener('click', function () {
     var targetEffect = event.target;
-    if (targetEffect.value === 'UL') {
-      return;
-    } else {
-      if (imgEffects.classList.contains('effects__preview--none')) {
-        window.imgUploadScale.classList.add('hidden');
+    var getEffectTarget = function () {
+      if (targetEffect.value === 'UL') {
+        return;
       } else {
-        if (window.imgUploadScale.classList.contains('hidden')) {
-          window.imgUploadScale.classList.remove('hidden');
+        if (imgEffects.classList.contains('effects__preview--none')) {
+          window.imgUploadScale.classList.add('hidden');
+        } else {
+          if (window.imgUploadScale.classList.contains('hidden')) {
+            window.imgUploadScale.classList.remove('hidden');
+          }
+        }
+        window.removeEffectClasses();
+        scalePin.style.left = scaleLine.offsetWidth + 'px';
+        scaleLevel.style.width = scaleLine.offsetWidth + 'px';
+        imgEffects.style.filter = '';
+        getImgEffect('effects__preview--' + event.target.value);
+        if (imgEffects.classList.contains('effects__preview--none')) {
+          window.imgUploadScale.classList.add('hidden');
         }
       }
-      removeEffectClasses();
-      scalePin.style.left = scaleLine.offsetWidth + 'px';
-      scaleLevel.style.width = scaleLine.offsetWidth + 'px';
-      imgEffects.style.filter = '';
-      getImgEffect('effects__preview--' + event.target.value);
-      if (imgEffects.classList.contains('effects__preview--none')) {
-        window.imgUploadScale.classList.add('hidden');
-      }
+    };
+    getEffectTarget();
+
+    if (window.bodyTag.classList.contains('modal-open') === false) {
+      effectsList.removeEventListener('click', function () {
+        getEffectTarget();
+      });
     }
   });
-
-  var scaleLine = document.querySelector('.scale__line');
-  var scalePin = document.querySelector('.scale__pin');
-  var scaleLevel = document.querySelector('.scale__level');
-  var scaleValue = document.querySelector('.scale__value');
-  window.RADIX_VALUE = 10;
 
   scalePin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -57,11 +71,6 @@
       var coordX = moveEvt.clientX;
       var scaleLineIndent = Math.round(scaleLine.getBoundingClientRect().left);
       var scaleValueMax = scaleLine.offsetWidth - scalePin.offsetWidth / 2;
-      var SCALE_PIN_MIN = 0;
-      var SCALE_VALUE_MIN = 0;
-      var MARVIN_FILTER_MAX = 100;
-      var PHOBOS_FILTER_MAX = 3;
-      var HEAT_FILTER_MAX = 3;
       var scaleMoveСalculation = (coordX - scaleLineIndent) + 'px';
       var scaleValueСalculation = coordX - scaleLineIndent - scalePin.offsetWidth / 2;
 
@@ -83,9 +92,9 @@
         scaleValue.value = scaleValueMax;
       }
 
-      for (window.i = 0; window.i < effects.length; window.i++) {
-        if (imgEffects.classList.contains('effects__preview--' + effects[window.i])) {
-          switch (effects[window.i]) {
+      effects.forEach(function (item) {
+        if (imgEffects.classList.contains('effects__preview--' + item)) {
+          switch (item) {
             case ('chrome'):
               imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
               break;
@@ -103,7 +112,7 @@
               break;
           }
         }
-      }
+      });
     };
 
     var onMouseUp = function (upEvt) {
