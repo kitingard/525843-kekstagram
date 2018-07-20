@@ -28,30 +28,31 @@
     });
   };
 
-  effectsList.addEventListener('click', function () {
-    var targetEffect = event.target;
-    var getEffectTarget = function () {
-      if (targetEffect.value === 'UL') {
-        return;
+  var getEffectTarget = function (targetEffect) {
+    if (targetEffect.value === 'UL') {
+      return;
+    } else {
+      if (imgEffects.classList.contains('effects__preview--none')) {
+        window.imgUploadScale.classList.add('hidden');
       } else {
-        if (imgEffects.classList.contains('effects__preview--none')) {
-          window.imgUploadScale.classList.add('hidden');
-        } else {
-          if (window.imgUploadScale.classList.contains('hidden')) {
-            window.imgUploadScale.classList.remove('hidden');
-          }
-        }
-        window.removeEffectClasses();
-        scalePin.style.left = scaleLine.offsetWidth + 'px';
-        scaleLevel.style.width = scaleLine.offsetWidth + 'px';
-        imgEffects.style.filter = '';
-        getImgEffect('effects__preview--' + event.target.value);
-        if (imgEffects.classList.contains('effects__preview--none')) {
-          window.imgUploadScale.classList.add('hidden');
+        if (window.imgUploadScale.classList.contains('hidden')) {
+          window.imgUploadScale.classList.remove('hidden');
         }
       }
-    };
-    getEffectTarget();
+      window.removeEffectClasses();
+      scalePin.style.left = scaleLine.offsetWidth + 'px';
+      scaleLevel.style.width = scaleLine.offsetWidth + 'px';
+      imgEffects.style.filter = '';
+      getImgEffect('effects__preview--' + event.target.value);
+      if (imgEffects.classList.contains('effects__preview--none')) {
+        window.imgUploadScale.classList.add('hidden');
+      }
+    }
+  };
+
+  effectsList.addEventListener('click', function () {
+    var targetEffect = event.target;
+    getEffectTarget(targetEffect);
   });
 
   scalePin.addEventListener('mousedown', function (evt) {
@@ -118,6 +119,7 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseUp', onMouseUp);
+      effectsList.removeEventListener('click', getEffectTarget);
     };
 
     document.addEventListener('mousemove', onMouseMove);
