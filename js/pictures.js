@@ -103,36 +103,29 @@
 
     imgFiltersForm.addEventListener('click', function () {
       var targetFilter = event.target;
-
-      var debounceFunct = window.debounce(function () {
-        getFilter(targetFilter.id);
-      });
-      debounceFunct();
+      debounceFunct(targetFilter);
     });
   };
 
+  var debounceFunct = window.debounce(function (targetFilter) {
+    getFilter(targetFilter.id);
+  });
 
-  var onDefects = function (errorMessage) {
-    var errorMessagePlace = document.querySelector('.img-filters__form');
-    var error = document.createElement('div');
-    error.innerHTML = errorMessage;
-    error.style.textAlign = 'center';
-    error.style.color = 'red';
-    error.style.fontWeight = 'bold';
-    error.style.fontSize = '20px';
-    error.style.backgroundColor = 'white';
-    error.style.width = '350px';
-    error.style.height = '50px';
-    error.style.marginTop = '10px';
-    error.style.paddingTop = '15px';
-    error.style.borderRadius = '5px';
 
-    errorMessagePlace.appendChild(error);
+  var onError = function (errorMessage) {
+    var errorMessageTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+    var errorMessageElement = errorMessageTemplate.cloneNode(false);
+    errorMessageElement.classList.remove('hidden');
+    errorMessageElement.style.position = 'fixed';
+    errorMessageElement.textContent = errorMessage;
+
+    var errorMessageParent = document.querySelector('main');
+    errorMessageParent.appendChild(errorMessageElement);
 
     setTimeout(function () {
-      error.parentNode.removeChild(error);
+      errorMessageElement.parentNode.removeChild(errorMessageElement);
     }, 10000);
   };
 
-  window.load(onSuccess, onDefects);
+  window.load(onSuccess, onError);
 })();
