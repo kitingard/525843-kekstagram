@@ -52,12 +52,6 @@
       }
     };
     getEffectTarget();
-
-    if (window.bodyTag.classList.contains('modal-open') === false) {
-      effectsList.removeEventListener('click', function () {
-        getEffectTarget();
-      });
-    }
   });
 
   scalePin.addEventListener('mousedown', function (evt) {

@@ -51,6 +51,13 @@
     });
   };
 
+  var getChecked = function () {
+    var effectHeatInput = document.querySelector('#effect-heat');
+    var effectNoneInput = document.querySelector('#effect-none');
+    effectHeatInput.removeAttribute('checked');
+    effectNoneInput.setAttribute('checked', 'checked');
+  };
+
   window.similarPictureElement.addEventListener('click', function () {
     var targetImg = event.target;
     if (window.bodyTag.classList.contains('modal-open')) {
@@ -70,10 +77,12 @@
     openPopup(window.imgEditingPopup);
     onEscPress(window.imgEditingPopup);
     window.imgUploadScale.classList.add('hidden');
+    getChecked();
   });
 
   imgEditingPopupCancel.addEventListener('click', function () {
     window.closePopup(window.imgEditingPopup);
+    getChecked();
     window.uploadingFile.value = '';
     window.removeEffectClasses();
   });
