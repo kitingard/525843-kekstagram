@@ -14,9 +14,21 @@
   var scalePin = document.querySelector('.scale__pin');
   var scaleLevel = document.querySelector('.scale__level');
   var scaleValue = document.querySelector('.scale__value');
+  var effectsRadioNodeList = document.querySelectorAll('.effects__radio');
+  var effectsRadioArray = Array.from(effectsRadioNodeList);
+  var effectNoneInput = document.querySelector('#effect-none');
 
   var getImgEffect = function (effectSelector) {
     imgEffects.classList.add(effectSelector);
+  };
+
+  window.getCheckedEffect = function () {
+    effectsRadioArray.forEach(function (item) {
+      if (item.checked) {
+        item.checked = false;
+      }
+      effectNoneInput.checked = true;
+    });
   };
 
   window.removeEffectClasses = function () {
@@ -28,7 +40,7 @@
     });
   };
 
-  var getEffectTarget = function (targetEffect) {
+  var getEffectTarget = function (targetEffect, e) {
     if (targetEffect.value === 'UL') {
       return;
     } else {
@@ -43,16 +55,19 @@
       scalePin.style.left = scaleLine.offsetWidth + 'px';
       scaleLevel.style.width = scaleLine.offsetWidth + 'px';
       imgEffects.style.filter = '';
-      getImgEffect('effects__preview--' + event.target.value);
+      getImgEffect('effects__preview--' + e.target.value);
       if (imgEffects.classList.contains('effects__preview--none')) {
         window.imgUploadScale.classList.add('hidden');
       }
     }
   };
 
-  effectsList.addEventListener('click', function () {
-    var targetEffect = event.target;
-    getEffectTarget(targetEffect);
+  effectsList.addEventListener('click', function (e) {
+    if (!e) {
+      e = event;
+    }
+    var targetEffect = e.target;
+    getEffectTarget(targetEffect, e);
   });
 
   scalePin.addEventListener('mousedown', function (evt) {

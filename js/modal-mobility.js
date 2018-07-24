@@ -1,34 +1,53 @@
 'use strict';
 
 (function () {
-  window.ESC_KEYCODE = 27;
+  var ESC_KEYCODE = 27;
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
-  window.uploadingFile = document.querySelector('#upload-file');
+  var imgUploadControl = document.querySelector('.img-upload__control');
+  var imgUploadInput = document.querySelector('.img-upload__input');
   window.imgEditingPopup = document.querySelector('.img-upload__overlay');
   var imgEditingPopupCancel = document.querySelector('.img-upload__cancel');
   window.imgUploadScale = document.querySelector('.img-upload__scale');
   window.bodyTag = document.querySelector('body');
   var bigPictureElement = document.querySelector('.big-picture');
 
+  var onEscPress = function (openableElement) {
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        if (window.textHashtags === evt.target || window.textDescription === evt.target) {
+          return;
+        } else {
+          window.closePopup(openableElement);
+        }
+      }
+    });
+  };
+
   var openPopup = function (openableElement) {
     openableElement.classList.remove('hidden');
     window.bodyTag.classList.add('modal-open');
   };
 
-  var onEscPress = function (openableElement) {
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
-        if (window.textHashtags === evt.target || window.textDescription === evt.target) {
-          return;
+  var onEnterPressAct = function (evt) {
+    if (evt.keyCode === window.ENTER_KEYCODE) {
+      var targetElement = evt.target;
+      if (targetElement === imgUploadInput) {
+        getCleanEditingPopup();
+      } else if (targetElement.tagName === 'A' || targetElement.tagName === 'IMG') {
+        if (targetElement.tagName === 'IMG') {
+          bigPictureElement.querySelector('img').src = targetElement.src;
         } else {
-          if (openableElement === window.imgEditingPopup) {
-            window.uploadingFile.value = '';
-            window.closePopup(openableElement);
-          } else {
-            window.closePopup(openableElement);
-          }
+          bigPictureElement.querySelector('img').src = targetElement.querySelector('img').src;
         }
+        openPopup(bigPictureElement);
+        onEscPress(bigPictureElement);
       }
+    }
+  };
+
+  var onEnterPress = function () {
+    document.addEventListener('keypress', function (evt) {
+      onEnterPressAct(evt);
     });
   };
 
@@ -36,30 +55,32 @@
     closingElement.classList.add('hidden');
     window.bodyTag.classList.remove('modal-open');
     document.removeEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
+      if (evt.keyCode === ESC_KEYCODE) {
         if (window.textHashtags === evt.target || window.textDescription === evt.target) {
           return;
         } else {
-          if (closingElement === window.imgEditingPopup) {
-            window.uploadingFile.value = '';
-            window.closePopup(closingElement);
-          } else {
-            window.closePopup(closingElement);
-          }
+          window.closePopup(closingElement);
         }
       }
     });
+
   };
 
-  var getChecked = function () {
-    var effectHeatInput = document.querySelector('#effect-heat');
-    var effectNoneInput = document.querySelector('#effect-none');
-    effectHeatInput.removeAttribute('checked');
-    effectNoneInput.setAttribute('checked', 'checked');
+  var getCleanEditingPopup = function () {
+    window.textHashtags.value = '';
+    window.textDescription.value = '';
+    window.imgUploadScale.classList.add('hidden');
+    imgUploadInput.value = '';
+    window.getCheckedEffect();
+    window.removeEffectClasses();
+    window.getCleanSize();
   };
 
-  window.similarPictureElement.addEventListener('click', function () {
-    var targetImg = event.target;
+  window.similarPictureElement.addEventListener('click', function (e) {
+    if (!e) {
+      e = event;
+    }
+    var targetImg = e.target;
     if (window.bodyTag.classList.contains('modal-open')) {
       return;
     } else if (targetImg.tagName === 'IMG') {
@@ -73,17 +94,18 @@
     window.closePopup(bigPictureElement);
   });
 
-  window.uploadingFile.addEventListener('change', function () {
+  imgUploadControl.addEventListener('click', function () {
+    getCleanEditingPopup();
+  });
+
+  imgUploadInput.addEventListener('change', function () {
     openPopup(window.imgEditingPopup);
     onEscPress(window.imgEditingPopup);
-    window.imgUploadScale.classList.add('hidden');
-    getChecked();
   });
 
   imgEditingPopupCancel.addEventListener('click', function () {
     window.closePopup(window.imgEditingPopup);
-    getChecked();
-    window.uploadingFile.value = '';
-    window.removeEffectClasses();
   });
+
+  onEnterPress();
 })();

@@ -30,4 +30,9 @@
       }
     }
   });
+
+  window.getCleanSize = function () {
+    imgUploadPreview.style.transform = '';
+    controlValue.value = MAX_VALUE;
+  };
 })();
