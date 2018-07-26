@@ -5,6 +5,7 @@
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
   var imgUploadControl = document.querySelector('.img-upload__control');
   var imgUploadInput = document.querySelector('.img-upload__input');
+  window.similarPictureElement = document.querySelector('.pictures');
   window.imgEditingPopup = document.querySelector('.img-upload__overlay');
   var imgEditingPopupCancel = document.querySelector('.img-upload__cancel');
   window.imgUploadScale = document.querySelector('.img-upload__scale');
@@ -33,14 +34,6 @@
       var targetElement = evt.target;
       if (targetElement === imgUploadInput) {
         getCleanEditingPopup();
-      } else if (targetElement.tagName === 'A' || targetElement.tagName === 'IMG') {
-        if (targetElement.tagName === 'IMG') {
-          bigPictureElement.querySelector('img').src = targetElement.src;
-        } else {
-          bigPictureElement.querySelector('img').src = targetElement.querySelector('img').src;
-        }
-        openPopup(bigPictureElement);
-        onEscPress(bigPictureElement);
       }
     }
   };
@@ -49,6 +42,28 @@
     document.addEventListener('keypress', function (evt) {
       onEnterPressAct(evt);
     });
+  };
+
+  window.onEnterImgOpen = function (evt) {
+    var targetImgElement = evt.target;
+    if (targetImgElement.tagName === 'IMG') {
+      bigPictureElement.querySelector('img').src = targetImgElement.src;
+    } else {
+      bigPictureElement.querySelector('img').src = targetImgElement.querySelector('img').src;
+    }
+    openPopup(bigPictureElement);
+    onEscPress(bigPictureElement);
+  };
+
+  window.onClickImgOpen = function (e) {
+    var targetImg = e.target;
+    if (window.bodyTag.classList.contains('modal-open')) {
+      return;
+    } else if (targetImg.tagName === 'IMG') {
+      bigPictureElement.querySelector('img').src = targetImg.src;
+      openPopup(bigPictureElement);
+      onEscPress(bigPictureElement);
+    }
   };
 
   window.closePopup = function (closingElement) {
@@ -75,20 +90,6 @@
     window.removeEffectClasses();
     window.getCleanSize();
   };
-
-  window.similarPictureElement.addEventListener('click', function (e) {
-    if (!e) {
-      e = event;
-    }
-    var targetImg = e.target;
-    if (window.bodyTag.classList.contains('modal-open')) {
-      return;
-    } else if (targetImg.tagName === 'IMG') {
-      bigPictureElement.querySelector('img').src = targetImg.src;
-      openPopup(bigPictureElement);
-      onEscPress(bigPictureElement);
-    }
-  });
 
   bigPictureCancel.addEventListener('click', function () {
     window.closePopup(bigPictureElement);

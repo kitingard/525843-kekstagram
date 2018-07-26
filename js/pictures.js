@@ -4,7 +4,6 @@
   var NEW_LENGHT = 10;
   var FIRST_ELEM = 0;
   var TIME_FOR_ERROR = 10000;
-  window.similarPictureElement = document.querySelector('.pictures');
   var similarPictureLinkTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var imgFiltersForm = document.querySelector('.img-filters__form');
   var filterPopular = document.querySelector('#filter-popular');

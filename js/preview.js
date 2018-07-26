@@ -111,12 +111,14 @@
 
   var getEnterClick = function (pictures, evt) {
     if (evt.keyCode === window.ENTER_KEYCODE) {
+      window.onEnterImgOpen(evt);
       getPreview(pictures, evt);
       window.similarPictureElement.removeEventListener('keydown', getEnterClick);
     }
   };
 
   var getMouseClick = function (pictures, e) {
+    window.onClickImgOpen(e);
     getPreview(pictures, e);
     window.similarPictureElement.removeEventListener('click', getMouseClick);
   };
