@@ -32,7 +32,9 @@
         var hashtag = hashtags[i];
 
         if (hashtag.length === 0) {
-          return;
+          window.textHashtags.setCustomValidity('Не должно быть больше одного пробела между хештегами');
+          getInvalidInput(window.textHashtags);
+          break;
         } else if (hashtag.length < HASHTAG_MIN_LENGTH) {
           window.textHashtags.setCustomValidity('Имя должно состоять минимум из 2-х символов');
           getInvalidInput(window.textHashtags);
@@ -52,7 +54,6 @@
         } else if (hashtags.length > HASHTAG_MAX) {
           window.textHashtags.setCustomValidity('Хэш-тегов не может быть больше пяти');
           getInvalidInput(window.textHashtags);
-          break;
         } else if (hashtagComparison.length > 0) {
           window.textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
           getInvalidInput(window.textHashtags);

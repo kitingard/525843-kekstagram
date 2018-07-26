@@ -112,17 +112,21 @@
   var getEnterClick = function (pictures, evt) {
     if (evt.keyCode === window.ENTER_KEYCODE) {
       getPreview(pictures, evt);
+      window.similarPictureElement.removeEventListener('keydown', getEnterClick);
     }
+  };
+
+  var getMouseClick = function (pictures, e) {
+    getPreview(pictures, e);
+    window.similarPictureElement.removeEventListener('click', getMouseClick);
   };
 
   window.getPreviewPicture = function (pictures) {
     window.similarPictureElement.addEventListener('click', function (e) {
-      getPreview(pictures, e);
-      window.similarPictureElement.removeEventListener('click', getPreview);
+      getMouseClick(pictures, e);
     });
     window.similarPictureElement.addEventListener('keydown', function (evt) {
       getEnterClick(pictures, evt);
-      window.similarPictureElement.removeEventListener('keydown', getEnterClick);
     });
   };
 })();

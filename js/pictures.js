@@ -69,11 +69,12 @@
         window.deleteElement(imagesArray, window.similarPictureElement);
 
         var picturesNew = [];
+
+        var randomElements = pictures.slice();
         for (var a = 0; picturesNew.length < NEW_LENGHT; a++) {
-          picturesNew[a] = pictures[window.getRandom(FIRST_ELEM, pictures.length - 1)];
-          picturesNew = picturesNew.filter(function (it, i) {
-            return picturesNew.indexOf(it) === i;
-          });
+          var randomElementIndex = window.getRandom(FIRST_ELEM, randomElements.length - 1);
+          picturesNew[a] = randomElements[randomElementIndex];
+          randomElements.splice(randomElementIndex, 1);
         }
         window.filterArray = picturesNew;
         break;
