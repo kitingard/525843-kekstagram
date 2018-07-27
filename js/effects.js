@@ -18,7 +18,6 @@
   var effectsRadioNodeList = document.querySelectorAll('.effects__radio');
   var effectsRadioArray = Array.from(effectsRadioNodeList);
   var effectNoneInput = document.querySelector('#effect-none');
-  var controlPercentValue = document.querySelector('.resize__control--value');
 
   var getImgEffect = function (effectSelector) {
     imgEffects.classList.add(effectSelector);
@@ -106,7 +105,6 @@
 
       effects.forEach(function (item) {
         if (imgEffects.classList.contains('effects__preview--' + item)) {
-          controlPercentValue.value = Math.round(scaleValueСalculation * MAX_PERCENT / scaleValueMax) + '%';
           switch (item) {
             case ('chrome'):
               scaleValue.value = parseInt((scaleValueСalculation / scaleValueMax) * MAX_PERCENT, window.RADIX_VALUE);
