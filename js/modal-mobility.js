@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
-  window.ESC_KEYCODE = 27;
+  var ESC_KEYCODE = 27;
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
-  window.uploadingFile = document.querySelector('#upload-file');
+  var imgUploadControl = document.querySelector('.img-upload__control');
+  var imgUploadInput = document.querySelector('.img-upload__input');
+  window.similarPictureElement = document.querySelector('.pictures');
   window.imgEditingPopup = document.querySelector('.img-upload__overlay');
   var imgEditingPopupCancel = document.querySelector('.img-upload__cancel');
   window.imgUploadScale = document.querySelector('.img-upload__scale');
@@ -13,77 +15,77 @@
   var openPopup = function (openableElement) {
     openableElement.classList.remove('hidden');
     window.bodyTag.classList.add('modal-open');
-  };
-
-  var onEscPress = function (openableElement) {
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
-        if (window.textHashtags === evt.target || window.textDescription === evt.target) {
-          return;
-        } else {
-          if (openableElement === window.imgEditingPopup) {
-            window.uploadingFile.value = '';
-            window.closePopup(openableElement);
-          } else {
-            window.closePopup(openableElement);
-          }
-        }
-      }
+      onEscPress(openableElement, evt);
     });
   };
 
-  window.closePopup = function (closingElement) {
-    closingElement.classList.add('hidden');
-    window.bodyTag.classList.remove('modal-open');
-    document.removeEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
-        if (window.textHashtags === evt.target || window.textDescription === evt.target) {
-          return;
-        } else {
-          if (closingElement === window.imgEditingPopup) {
-            window.uploadingFile.value = '';
-            window.closePopup(closingElement);
-          } else {
-            window.closePopup(closingElement);
-          }
-        }
+  var onEscPress = function (openableElement, evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      if (window.textHashtags === evt.target || window.textDescription === evt.target) {
+        return;
+      } else {
+        window.closePopup(openableElement);
       }
-    });
+    }
   };
 
-  var getChecked = function () {
-    var effectHeatInput = document.querySelector('#effect-heat');
-    var effectNoneInput = document.querySelector('#effect-none');
-    effectHeatInput.removeAttribute('checked');
-    effectNoneInput.setAttribute('checked', 'checked');
+  window.onEnterPress = function (evt) {
+    var targetElement = evt.target;
+    if (window.bodyTag.classList.contains('modal-open')) {
+      return;
+    } else if (targetElement === imgUploadInput) {
+      getCleanEditingPopup();
+      return;
+    } else if (targetElement.tagName === 'IMG') {
+      bigPictureElement.querySelector('img').src = targetElement.src;
+    } else if (targetElement.tagName === 'A') {
+      bigPictureElement.querySelector('img').src = targetElement.querySelector('img').src;
+    } else {
+      return;
+    }
+    openPopup(bigPictureElement);
   };
 
-  window.similarPictureElement.addEventListener('click', function () {
-    var targetImg = event.target;
+  window.onClickImgOpen = function (e) {
+    var targetImg = e.target;
     if (window.bodyTag.classList.contains('modal-open')) {
       return;
     } else if (targetImg.tagName === 'IMG') {
       bigPictureElement.querySelector('img').src = targetImg.src;
       openPopup(bigPictureElement);
-      onEscPress(bigPictureElement);
     }
-  });
+  };
+
+  window.closePopup = function (closingElement) {
+    closingElement.classList.add('hidden');
+    window.bodyTag.classList.remove('modal-open');
+    document.removeEventListener('keydown', onEscPress);
+  };
+
+  var getCleanEditingPopup = function () {
+    imgUploadInput.value = '';
+    window.textHashtags.value = '';
+    window.textDescription.value = '';
+    window.imgUploadScale.classList.add('hidden');
+    window.getCheckedEffect();
+    window.removeEffectClasses();
+    window.getCleanSize();
+  };
 
   bigPictureCancel.addEventListener('click', function () {
     window.closePopup(bigPictureElement);
   });
 
-  window.uploadingFile.addEventListener('change', function () {
+  imgUploadControl.addEventListener('click', function () {
+    getCleanEditingPopup();
+  });
+
+  imgUploadInput.addEventListener('change', function () {
     openPopup(window.imgEditingPopup);
-    onEscPress(window.imgEditingPopup);
-    window.imgUploadScale.classList.add('hidden');
-    getChecked();
   });
 
   imgEditingPopupCancel.addEventListener('click', function () {
     window.closePopup(window.imgEditingPopup);
-    getChecked();
-    window.uploadingFile.value = '';
-    window.removeEffectClasses();
   });
 })();
