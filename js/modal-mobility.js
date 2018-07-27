@@ -32,7 +32,9 @@
 
   window.onEnterPress = function (evt) {
     var targetElement = evt.target;
-    if (targetElement === imgUploadInput) {
+    if (window.bodyTag.classList.contains('modal-open')) {
+      return;
+    } else if (targetElement === imgUploadInput) {
       getCleanEditingPopup();
       return;
     } else if (targetElement.tagName === 'IMG') {
