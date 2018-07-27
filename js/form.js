@@ -15,27 +15,31 @@
 
   var getHashtagsValidation = function () {
     var hashtags = window.textHashtags.value.trim();
-    hashtags = window.textHashtags.value.split(' ');
-    var hashtagComparison = [];
-    hashtags.forEach(function (item) {
-      hashtagComparison.push(item.toLowerCase());
-    });
+    hashtags = hashtags.split(' ');
 
-    hashtagComparison = hashtagComparison.filter(function (it, i) {
-      return hashtagComparison.indexOf(it) !== i;
+    var hashtagsComparison = [];
+
+    for (var a = 0; a < hashtags.length; a++) {
+      if (hashtags[a] === '') {
+        hashtags.splice(hashtags[a], 1);
+        a--;
+      } else {
+        hashtagsComparison.push(hashtags[a].toLowerCase());
+      }
+    }
+
+    var hashtagsFilter = hashtagsComparison.slice();
+    hashtagsFilter = hashtagsFilter.filter(function (it, i) {
+      return hashtagsFilter.indexOf(it) !== i;
     });
 
     if (hashtags.length === 0) {
       return;
     } else {
-      for (var i = 0; i < hashtags.length; i++) {
-        var hashtag = hashtags[i];
+      for (var i = 0; i < hashtagsComparison.length; i++) {
+        var hashtag = hashtagsComparison[i];
 
-        if (hashtag.length === 0) {
-          window.textHashtags.setCustomValidity('Не должно быть больше одного пробела между хештегами');
-          getInvalidInput(window.textHashtags);
-          break;
-        } else if (hashtag.length < HASHTAG_MIN_LENGTH) {
+        if (hashtag.length < HASHTAG_MIN_LENGTH) {
           window.textHashtags.setCustomValidity('Имя должно состоять минимум из 2-х символов');
           getInvalidInput(window.textHashtags);
           break;
@@ -51,12 +55,16 @@
           window.textHashtags.setCustomValidity('Хэш-тег должен начинаться со знака #');
           getInvalidInput(window.textHashtags);
           break;
-        } else if (hashtags.length > HASHTAG_MAX) {
+        } else if (hashtagsComparison.length > HASHTAG_MAX) {
           window.textHashtags.setCustomValidity('Хэш-тегов не может быть больше пяти');
           getInvalidInput(window.textHashtags);
-        } else if (hashtagComparison.length > 0) {
+          break;
+        } else if (hashtagsFilter.length > 0) {
           window.textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
           getInvalidInput(window.textHashtags);
+          break;
+        } else {
+          getValidHashtags();
         }
       }
     }

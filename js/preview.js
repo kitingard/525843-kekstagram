@@ -111,7 +111,7 @@
 
   var getEnterClick = function (pictures, evt) {
     if (evt.keyCode === window.ENTER_KEYCODE) {
-      window.onEnterImgOpen(evt);
+      window.onEnterPress(evt);
       getPreview(pictures, evt);
       window.similarPictureElement.removeEventListener('keydown', getEnterClick);
     }
