@@ -5,6 +5,7 @@
   var SCALE_PIN_MIN = 0;
   var SCALE_VALUE_MIN = 0;
   var MARVIN_FILTER_MAX = 100;
+  var MAX_PERCENT = 100;
   var PHOBOS_FILTER_MAX = 3;
   var HEAT_FILTER_MAX = 3;
   var imgEffects = document.querySelector('.img-upload__preview img');
@@ -36,6 +37,7 @@
       if (imgEffects.classList.contains('effects__preview--' + item)) {
         imgEffects.classList.remove('effects__preview--' + item);
         imgEffects.style.filter = '';
+        scaleValue.value = 100;
       }
     });
   };
@@ -86,7 +88,6 @@
 
       scalePin.style.left = scaleMoveСalculation;
       scaleLevel.style.width = scaleMoveСalculation;
-      scaleValue.value = scaleValueСalculation;
 
       if (parseInt(scalePin.style.left, window.RADIX_VALUE) <= SCALE_PIN_MIN) {
         scalePin.style.left = SCALE_PIN_MIN;
@@ -96,29 +97,34 @@
         scaleLevel.style.width = scaleLine.offsetWidth + 'px';
       }
 
-      if (scaleValue.value <= SCALE_VALUE_MIN) {
-        scaleValue.value = SCALE_VALUE_MIN;
-      } else if (scaleValue.value >= parseInt(scaleLine.offsetWidth, window.RADIX_VALUE)) {
-        scaleValue.value = scaleValueMax;
+      if (scaleValueСalculation <= SCALE_VALUE_MIN) {
+        scaleValueСalculation = SCALE_VALUE_MIN;
+      } else if (scaleValueСalculation >= parseInt(scaleLine.offsetWidth, window.RADIX_VALUE)) {
+        scaleValueСalculation = scaleValueMax;
       }
 
       effects.forEach(function (item) {
         if (imgEffects.classList.contains('effects__preview--' + item)) {
           switch (item) {
             case ('chrome'):
-              imgEffects.style.filter = 'grayscale(' + (scaleValue.value / scaleValueMax) + ')';
+              scaleValue.value = parseInt((scaleValueСalculation / scaleValueMax) * MAX_PERCENT, window.RADIX_VALUE);
+              imgEffects.style.filter = 'grayscale(' + scaleValueСalculation / scaleValueMax + ')';
               break;
             case ('sepia'):
-              imgEffects.style.filter = 'sepia(' + (scaleValue.value / scaleValueMax) + ')';
+              scaleValue.value = parseInt((scaleValueСalculation / scaleValueMax) * MAX_PERCENT, window.RADIX_VALUE);
+              imgEffects.style.filter = 'sepia(' + (scaleValueСalculation / scaleValueMax) + ')';
               break;
             case ('marvin'):
-              imgEffects.style.filter = 'invert(' + (scaleValue.value * MARVIN_FILTER_MAX / scaleValueMax) + '%)';
+              scaleValue.value = parseInt(scaleValueСalculation * MARVIN_FILTER_MAX / scaleValueMax, window.RADIX_VALUE);
+              imgEffects.style.filter = 'invert(' + (scaleValueСalculation * MARVIN_FILTER_MAX / scaleValueMax) + '%)';
               break;
             case ('phobos'):
-              imgEffects.style.filter = 'blur(' + (scaleValue.value * PHOBOS_FILTER_MAX / scaleValueMax) + 'px)';
+              scaleValue.value = parseInt((scaleValueСalculation / scaleValueMax) * MAX_PERCENT, window.RADIX_VALUE);
+              imgEffects.style.filter = 'blur(' + (scaleValueСalculation * PHOBOS_FILTER_MAX / scaleValueMax) + 'px)';
               break;
             case ('heat'):
-              imgEffects.style.filter = 'brightness(' + (scaleValue.value * HEAT_FILTER_MAX / scaleValueMax) + ')';
+              scaleValue.value = parseInt((scaleValueСalculation / scaleValueMax) * MAX_PERCENT, window.RADIX_VALUE);
+              imgEffects.style.filter = 'brightness(' + (scaleValueСalculation * HEAT_FILTER_MAX / scaleValueMax) + ')';
               break;
           }
         }
