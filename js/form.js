@@ -47,7 +47,7 @@
           window.textHashtags.setCustomValidity('Имя не должно превышать 20-ти символов, включая #');
           getInvalidInput(window.textHashtags);
           break;
-        } else if (hashtag.lastIndexOf('#') > 0) {
+        } else if (/,/.test(hashtag) === true) {
           window.textHashtags.setCustomValidity('Хэш-теги разделяются пробелами');
           getInvalidInput(window.textHashtags);
           break;
